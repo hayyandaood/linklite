@@ -5,6 +5,8 @@ app_description = "TEST APP"
 app_email = "hayyandaood90@gmail.com"
 app_license = "agpl-3.0"
 
+
+website_path_resolver = "linklite.utils.path_resolver"
 # Apps
 # ------------------
 
