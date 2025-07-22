@@ -39,8 +39,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-07-22 12:04:37.170391",
+ "links": [
+  {
+   "link_doctype": "Short Link Click",
+   "link_fieldname": "link"
+  }
+ ],
+ "modified": "2025-07-22 21:00:26.106041",
  "modified_by": "Administrator",
  "module": "linklite",
  "name": "Short Link",
