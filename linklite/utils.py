@@ -18,12 +18,12 @@ def path_resolver(path: str):
         click.ip = request_headers.get("X-Forwarded-For")
         click.user_agent = request_headers.get("User-Agent")
         click.referer = request_headers.get("Referer")
-        frappe.logger().info(f"Referrer URL: {click.referer}")
         click.link = short_link.name
         click.insert()
         click.submit()
         frappe.db.commit() #to remove once MyISAM
 
         frappe.redirect(short_link.destination_url)
-
-    return orignal_resolve_path(path)
+    else:
+        return orignal_resolve_path(path)
+    
