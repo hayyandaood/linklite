@@ -1,37 +1,104 @@
 <template>
-  <div class="max-w-3xl py-12 mx-auto">
-    <h2 class="font-bold text-lg text-gray-600 mb-4">
-      Welcome {{ session.user }}!
-    </h2>
-
-    <Button theme="gray" variant="solid" icon-left="code" @click="ping.fetch" :loading="ping.loading">
-      Click to send 'ping' request
-    </Button>
-    <div>
-      {{ ping.data }}
+  <div class='m-5'>
+    <div class="flex items-baseline justify-between mb-4">
+        <h2 class="text-gray-900 font-semibold">Links</h2>
+        <Button variant="solid" @click="createDialogShown = true">Create</Button>
     </div>
-    <pre>{{ ping }}</pre>
+    <ListView v-if="links.data"
+    rowKey="name"
+    :columns="[{
+        label: 'Short Link',
+        key: 'name',
+        width: 0.4
+    },
+    {
+        label: 'Destination',
+        key: 'destination_url'
+    },
+    {
+        label: 'Description',
+        key: 'description'
+    }]"
+    :rows="links.data"
+    :options="{
+        shortToolTip: false,
+        selectable: false
+    }"
+    />
+    <Dialog :options="{
+        title: 'Short Link',
+        size: 'xl',
+        actions: [{
+            label: 'Create',
+            variant: 'solid',
+            onClick(close){
+              links.insert.submit({
+                ...newLink
+              })
+              close();
+            }
+        }]
+        }" v-model="createDialogShown">
+        <template #body-content>
+          <form class="space-y-3">
+              <FormControl
+                  type="text"
+                  label="Short"
+                  v-model="newLink.short_link"
+              />
+              <FormControl
+                  type="text"
+                  label="destination_url"
+                  v-model="newLink.destination_url"
+              />
+              <FormControl
+                  type="textarea"
+                  label="description"
+                  v-model="newLink.description"
+              />
+          </form>
+          <ErrorMessage class="mt-2" :message="links.insert.error"
+          />
+        </template>
+        <template #actions>
 
-    <div class="flex flex-row space-x-2 mt-4">
-      <Button @click="showDialog = true">Open Dialog</Button>
-      <Button @click="session.logout.submit()">Logout</Button>
-    </div>
-
-    <!-- Dialog -->
-    <Dialog title="Title" v-model="showDialog"> Dialog content </Dialog>
+        </template>
+    </Dialog>
+    
   </div>
 </template>
 
 <script setup>
-import { Dialog } from "frappe-ui"
-import { createResource } from "frappe-ui"
 import { ref } from "vue"
-import { session } from "../data/session"
-
-const ping = createResource({
-	url: "ping",
-	auto: true,
+import { ListView, Dialog, FormControl, ErrorMessage } from "frappe-ui"
+//import { createListResource } from 'frappe-ui'
+import { useList } from "frappe-ui" //working 
+import { reactive } from 'vue'
+const createDialogShown = ref(false)
+const newLink = reactive ({
+    name:'',
+    description: '',
+    destination_url: ''
 })
-
-const showDialog = ref(false)
+const links = useList({
+  doctype: 'Short Link',
+  fields: ['name','destination_url','description'],
+  orderBy: 'creation desc' 
+})
 </script>
+
+
+<!-- 
+            <form>
+                <FormControl
+                    type="text"
+                    label="Short"
+                    v-model="newLink.name"
+                />
+            </form>
+
+            const newLink = reactive ({
+    name:'',
+    description: '',
+    destination_url: ''
+}) -->
