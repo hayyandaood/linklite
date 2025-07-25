@@ -1,99 +1,123 @@
 <template>
-  <div class='m-5'>
+  <div class="m-5">
     <div class="flex items-baseline justify-between mb-4">
-        <h2 class="text-gray-900 font-semibold">Links</h2>
-        <Button variant="solid" @click="createDialogShown = true">
-			Create Link
-			<template #suffix>
-				<span class=" font-mono bg-white/80 text-gray-700 rounded-sm px-1">C</span>            
-            </template>
-		</Button>
+      <h2 class="text-gray-900 font-semibold">Links</h2>
+      <Button variant="solid" @click="createDialogShown = true">
+        Create Link
+        <template #suffix>
+          <span class="font-mono bg-white/80 text-gray-700 rounded-sm px-1"
+            >C</span
+          >
+        </template>
+      </Button>
     </div>
-    <ListView v-if="links.data"
-    rowKey="name"
-    :columns="[{
-        label: 'Short Link',
-        key: 'short_link',
-        width: 0.4
-    },
-    {
-        label: 'Destination',
-        key: 'destination_url'
-    },
-    {
-        label: 'Description',
-        key: 'description'
-    }]"
-    :rows="links.data"
-    :options="{
+    <ListView
+      v-if="links.list.data"
+      rowKey="name"
+      :columns="[
+        {
+          label: 'Short Link',
+          key: 'short_link',
+          width: 0.4,
+        },
+        {
+          label: 'Destination',
+          key: 'destination_url',
+        },
+        {
+          label: 'Description',
+          key: 'description',
+        },
+      ]"
+      :rows="links.list.data"
+      :options="{
         shortToolTip: false,
-        selectable: false
-    }"
+        selectable: false,
+      }"
     />
-    <Dialog :options="{
-        title: 'Short Link',
+    <Dialog
+      :options="{
+        title: 'New Short Link',
         size: 'xl',
-        actions: [{
+
+        actions: [
+          {
             label: 'Create',
             variant: 'solid',
-            async onClick(close) {
-                console.log('About to submit:', { ...newLink })
-                await links.insert.submit({ ...newLink })
-                console.log('Success! Closing dialog.')
-                // Reset form
-                newLink.short_link = ''
-                newLink.description = ''
-                newLink.destination_url = ''
-                // Reload the list to show new data
-                links.reload()
-                close()
-            }
-        }]
-        }" v-model="createDialogShown">
-        <template #body-content>
-          <form class="space-y-3">
-              <FormControl
-                  type="text"
-                  label="Short"
-                  v-model="newLink.short_link"
-              />
-              <FormControl
-                  type="text"
-                  label="Destination URL"
-                  v-model="newLink.destination_url"
-              />
-              <FormControl
-                  type="textarea"
-                  label="Description"
-                  v-model="newLink.description"
-              />
-          </form>
-          <ErrorMessage class="mt-2" :message="links.insert.error" />
-        </template>
+            onClick(close) {
+              links.insert.submit(
+                {
+                  ...newLink,
+                },
+                {
+                  onSuccess() {
+                    console.log('hello');
+                    newLink.short_link = '';
+                    newLink.destination_url = '';
+                    newLink.description = '';
+                    close();
+                  },
+                }
+              );
+            },
+          },
+        ],
+      }"
+      v-model="createDialogShown"
+    >
+      <template #body-content>
+        <form class="space-y-3">
+          <FormControl
+            type="text"
+            label="Destination URL"
+            placeholder="https://youtube.com/@buildwithhussain"
+            v-model="newLink.destination_url"
+            autofocus
+          />
+
+          <FormControl
+            type="text"
+            placeholder="bwh"
+            label="Short Link"
+            v-model="newLink.short_link"
+          />
+
+          <FormControl
+            type="textarea"
+            label="Description"
+            v-model="newLink.description"
+          />
+        </form>
+
+        <ErrorMessage class="mt-2" :message="links.insert.error" />
+      </template>
     </Dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue"
+import { ref, reactive } from "vue";
 import { onKeyStroke } from "@vueuse/core";
-import { ListView, Dialog, FormControl, ErrorMessage, Button } from "frappe-ui"
-import { useList } from "frappe-ui"
+import { ListView, Dialog, FormControl, ErrorMessage, Button } from "frappe-ui";
+//import { useList } from "frappe-ui";
+import { createListResource } from "frappe-ui";
 
-const createDialogShown = ref(false)
+const createDialogShown = ref(false);
 
 const newLink = reactive({
-    short_link: '',
-    description: '',
-    destination_url: '',
-})
+  short_link: "",
+  description: "",
+  destination_url: "",
+});
 
 onKeyStroke(["c", "C"], () => {
-	createDialogShown.value = true;
+  createDialogShown.value = true;
 });
-const links = useList({
-  doctype: 'Short Link',
-  fields: ['short_link','destination_url','description'],
-  orderBy: 'creation desc' 
-})
+const links = createListResource({
+  doctype: "Short Link",
+  fields: ["short_link", "destination_url", "description"],
+  orderBy: "creation desc",
+});
+
+links.fetch();
 </script>
