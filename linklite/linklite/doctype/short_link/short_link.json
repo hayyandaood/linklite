@@ -33,6 +33,7 @@
    "unique": 1
   },
   {
+   "description": "short description about this link ..",
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
@@ -45,7 +46,7 @@
    "link_fieldname": "link"
   }
  ],
- "modified": "2025-07-22 21:00:26.106041",
+ "modified": "2025-07-26 20:38:31.920124",
  "modified_by": "Administrator",
  "module": "linklite",
  "name": "Short Link",
