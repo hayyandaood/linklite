@@ -33,6 +33,10 @@
       :options="{
         shortToolTip: false,
         selectable: false,
+        onRowClick: (row) => {
+            editDialogShown = true
+            Object.assign(newLink, row)
+        }
       }"
     />
     <Dialog
@@ -92,6 +96,75 @@
         <ErrorMessage class="mt-2" :message="links.insert.error" />
       </template>
     </Dialog>
+    <Dialog
+      :options="{
+        title: 'Edit Link',
+        size: 'xl',
+
+        actions: [
+          {
+            label: 'Edit',
+            variant: 'solid',
+            // onRowClick (close) {
+            //   links.insert.submit(
+            //     {
+            //       ...newLink,
+            //     },
+            //     {
+            //       onSuccess() {
+            //         console.log('hello');
+            //         newLink.short_link = '';
+            //         newLink.destination_url = '';
+            //         newLink.description = '';
+            //         close();
+            //       },
+            //     }
+            //   );
+            // },
+          },
+          {
+            label: 'Delete',
+            variant: 'outline',
+            theme: 'red',
+            onClick(close){
+                links.delete.submit(newLink.short_link, {
+                    onSuccess() {
+                        close();
+                    }
+                })
+            }
+          }
+        ],
+      }"
+      v-model="editDialogShown"
+    >
+      <template #body-content>
+        <form class="space-y-3">
+          <FormControl
+            type="text"
+            label="Destination URL"
+            placeholder="https://youtube.com/@buildwithhussain"
+            v-model="newLink.destination_url"
+            autofocus
+          />
+
+          <FormControl
+            type="text"
+            placeholder="bwh"
+            label="Short Link"
+            v-model="newLink.short_link"
+          />
+
+          <FormControl
+            type="textarea"
+            label="Description"
+            v-model="newLink.description"
+          />
+        </form>
+
+        <ErrorMessage class="mt-2" :message="links.insert.error" />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -103,7 +176,7 @@ import { ListView, Dialog, FormControl, ErrorMessage, Button } from "frappe-ui";
 import { createListResource } from "frappe-ui";
 
 const createDialogShown = ref(false);
-
+const editDialogShown = ref(false)
 const newLink = reactive({
   short_link: "",
   description: "",
