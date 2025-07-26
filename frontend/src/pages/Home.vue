@@ -55,7 +55,6 @@
                 },
                 {
                   onSuccess() {
-                    console.log('hello');
                     newLink.short_link = '';
                     newLink.destination_url = '';
                     newLink.description = '';
@@ -103,24 +102,26 @@
 
         actions: [
           {
-            label: 'Edit',
+            label: 'Save',
             variant: 'solid',
-            // onRowClick (close) {
-            //   links.insert.submit(
-            //     {
-            //       ...newLink,
-            //     },
-            //     {
-            //       onSuccess() {
-            //         console.log('hello');
-            //         newLink.short_link = '';
-            //         newLink.destination_url = '';
-            //         newLink.description = '';
-            //         close();
-            //       },
-            //     }
-            //   );
-            // },
+            onClick (close) {
+              links.setValue.submit(
+                {
+                  name: newLink.short_link,
+                  description: newLink.description,
+                  destination_url: newLink.destination_url
+                },
+                {
+                  onSuccess() {
+                    newLink.short_link = '';
+                    newLink.destination_url = '';
+                    newLink.description = '';
+                    links.fetch();
+                    close();
+                  },
+                }
+              );
+            },
           },
           {
             label: 'Delete',
@@ -176,7 +177,8 @@ import { ListView, Dialog, FormControl, ErrorMessage, Button } from "frappe-ui";
 import { createListResource } from "frappe-ui";
 
 const createDialogShown = ref(false);
-const editDialogShown = ref(false)
+const editDialogShown = ref(false);
+
 const newLink = reactive({
   short_link: "",
   description: "",
