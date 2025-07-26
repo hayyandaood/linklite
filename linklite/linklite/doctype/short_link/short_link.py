@@ -9,4 +9,3 @@ class ShortLink(Document):
 	def on_trash(self):
 		#delete the short links clicks records .
 		frappe.db.delete("Short Link Click", {"link": self.name})
-			

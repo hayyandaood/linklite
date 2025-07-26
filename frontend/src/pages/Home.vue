@@ -36,14 +36,24 @@
         onRowClick: (row) => {
             editDialogShown = true
             Object.assign(newLink, row)
-        }
+        },
+        emptyState: {
+          title: 'No records found',
+          description: 'Create a new Link to get started',
+          button: {
+            label: 'New Link',
+            variant: 'solid',
+            onClick: () => {
+              createDialogShown = true
+            },
+          },
+        },
       }"
     />
     <Dialog
       :options="{
         title: 'New Short Link',
         size: 'xl',
-
         actions: [
           {
             label: 'Create',
@@ -75,7 +85,7 @@
             label="Destination URL"
             placeholder="https://youtube.com/@buildwithhussain"
             v-model="newLink.destination_url"
-            autofocus
+            autofucos
           />
 
           <FormControl
