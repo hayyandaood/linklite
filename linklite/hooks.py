@@ -11,6 +11,15 @@ website_path_resolver = "linklite.utils.path_resolver"
 website_route_rules = [{'from_route': '/frontend/<path:app_path>', 'to_route': 'frontend'},]
 
 export_python_type_annotations = True
+
+fixtures = [
+    {
+        "dt": "Black Listed Slug",
+        "filters": {
+            "name": ("in", ("apps","app"))
+        }
+    }
+]
 # Apps
 # ------------------
 
