@@ -58,21 +58,7 @@
           {
             label: 'Create',
             variant: 'solid',
-            onClick(close) {
-              links.insert.submit(
-                {
-                  ...newLink,
-                },
-                {
-                  onSuccess() {
-                    newLink.short_link = '';
-                    newLink.destination_url = '';
-                    newLink.description = '';
-                    close();
-                  },
-                }
-              );
-            },
+            onClick: createShortLink,
           },
         ],
       }"
@@ -185,6 +171,7 @@ import { onKeyStroke } from "@vueuse/core";
 import { ListView, Dialog, FormControl, ErrorMessage, Button } from "frappe-ui";
 //import { useList } from "frappe-ui";
 import { createListResource } from "frappe-ui";
+import { toast } from 'vue-sonner';
 
 const createDialogShown = ref(false);
 const editDialogShown = ref(false);
@@ -205,4 +192,23 @@ const links = createListResource({
 });
 
 links.fetch();
+
+function createShortLink(close) {
+	links.insert.submit(
+		{
+			...newLink,
+		},
+		{
+			onSuccess() {
+				newLink.short_link = "";
+				newLink.description = "";
+				newLink.destination_url = "";
+				console.log(navigator.clipboard,window.isSecureContext)
+        //navigator.clipboard.writeText()
+				close();
+			},
+		},
+	);
+}
+
 </script>
