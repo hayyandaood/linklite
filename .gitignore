@@ -5,3 +5,12 @@
 tags
 node_modules
 __pycache__
+
+
+
+
+
+
+linklite/public/frontend
+linklite/public/node_modules
+node_modules/
