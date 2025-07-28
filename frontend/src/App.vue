@@ -1,5 +1,5 @@
 <template>
-  <Toaster/>
+  <Toaster position="top-right" />
   <div>
     <router-view />
   </div>
@@ -7,5 +7,6 @@
 
 
 <script setup>
-import { Toaster } from 'vue-sonner';
+import { Toaster, toast } from 'vue-sonner';
+import 'vue-sonner/style.css'
 </script>

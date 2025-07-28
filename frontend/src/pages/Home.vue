@@ -166,12 +166,12 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { onKeyStroke } from "@vueuse/core";
-import { ListView, Dialog, FormControl, ErrorMessage, Button } from "frappe-ui";
-//import { useList } from "frappe-ui";
+import { ListView, Dialog, FormControl, ErrorMessage, Dropdown } from "frappe-ui";
 import { createListResource } from "frappe-ui";
-import { toast } from 'vue-sonner';
+import { reactive } from "vue";
+import { toast } from 'vue-sonner'
 
 const createDialogShown = ref(false);
 const editDialogShown = ref(false);
@@ -193,22 +193,27 @@ const links = createListResource({
 
 links.fetch();
 
+
 function createShortLink(close) {
-	links.insert.submit(
-		{
-			...newLink,
-		},
-		{
-			onSuccess() {
-				newLink.short_link = "";
-				newLink.description = "";
-				newLink.destination_url = "";
-				console.log(navigator.clipboard,window.isSecureContext)
-        //navigator.clipboard.writeText()
-				close();
-			},
-		},
-	);
+  links.insert.submit(
+    {
+      ...newLink,
+    },
+    {
+      onSuccess() {
+        newLink.short_link = "";
+        newLink.description = "";
+        newLink.destination_url = "";
+        copyShortLinkToClipboard(newLink.short_link)
+        close();
+      },
+    },
+  );
+}
+
+function copyShortLinkToClipboard(text) {
+  navigator.clipboard.writeText(`${window.location.origin}/${text}`);
+  toast.success("Link copied to clipboard!")
 }
 
 </script>
