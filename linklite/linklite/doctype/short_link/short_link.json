@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "destination_url",
+  "qr_code",
   "column_break_ehdc",
   "short_link",
   "description"
@@ -37,8 +38,14 @@
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "qr_code",
+   "fieldtype": "Attach Image",
+   "label": "QR Code"
   }
  ],
+ "image_field": "qr_code",
  "index_web_pages_for_search": 1,
  "links": [
   {
@@ -46,7 +53,7 @@
    "link_fieldname": "link"
   }
  ],
- "modified": "2025-07-26 20:38:31.920124",
+ "modified": "2025-07-28 10:52:58.397107",
  "modified_by": "Administrator",
  "module": "linklite",
  "name": "Short Link",

@@ -16,12 +16,38 @@ class ShortLink(Document):
 
 		description: DF.SmallText | None
 		destination_url: DF.Data
+		qr_code: DF.AttachImage | None
 		short_link: DF.Data
 	# end: auto-generated types
 	def before_insert(self):
 		self.validate_black_listed_slug()
 		self.validate_nested_slug()
 	
+	def after_insert(self):
+		self.generate_qr_code()
+	
+	@frappe.whitelist()
+	def generate_qr_code(self):
+		import qrcode
+		import io
+
+		img = qrcode.make(f"http://{frappe.local.site}:{frappe.conf.webserver_port}/{self.short_link}") # in Production
+		output = io.BytesIO()
+		img.save(output, format="PNG")
+		hex_data = output.getvalue()
+
+		file = frappe.get_doc({
+			"doctype": "File",
+			"file_name": f"qr-code-{self.name}.png",
+			"content": hex_data,
+			"attached_to_doctype": "Short Link",
+			"attached_to_name": self.name,
+			"attached_to_field": "qr_code"
+		}).save()
+
+		self.qr_code = file.file_url
+		self.save()
+
 	def validate_black_listed_slug(self):
 		if frappe.db.exists("Black Listed Slug",self.short_link):
 			frappe.throw(f"Slug {frappe.bold(self.short_link)} is not allowed!")

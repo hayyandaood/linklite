@@ -10,5 +10,12 @@ frappe.ui.form.on("Short Link", {
 				const url = frappe.urllib.get_full_url(frm.doc.short_link);
 				frappe.utils.copy_to_clipboard(url, __("Short Link copied"));
 			});
+
+		frm.add_custom_button("Regenerate QR Code", () => {
+			frm.call('generate_qr_code').then(() => {
+				frappe.show_alert("Regenerated!")
+				frm.refresh()
+			})
+		})
 	},
 });
